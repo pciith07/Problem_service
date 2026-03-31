@@ -1,24 +1,58 @@
 const NotImplemented = require('../errors/NotImplemented.js')
-const BadRequest = require('../errors/badRequest.js')
+const {ProblemService} = require('../services')
+const {ProblemRepository} = require('../repositories')
+const {StatusCodes} = require('http-status-codes')
+const problemService = new ProblemService(new ProblemRepository());
+
+
 function pingController(req,res){
     return res.json({message: "Ping Controller is up"})
 }
 
-function addProblem(req, res, next){
+async function addProblem(req, res, next){
     try{
-        throw new BadRequest('addProblem');
+        const newProblem = await problemService.createProblem(req.body);
+        return res.status(StatusCodes.CREATED).json({
+            success: true,
+            message: "Succesfully created a new problem",
+            error: {},
+            data: newProblem
+        })
     }
     catch(error){
         next(error);
     }
 }
 
-function getAllProblems(req, res, next){
-    return next(new UnImplemented('getAllProblems'));
+async function getAllProblems(req, res, next){
+    try{
+        const response = await problemService.getAllProblems();
+        return res.status(StatusCodes.OK).json({
+                success: true,
+                message: 'Succesfully fetched a new problem',
+                error: {},
+                data: response
+        });
+    }
+    catch(error){
+        next(error)
+    }
 }
 
-function getProblem(req, res, next){
-    return next(new UnImplemented('getProblem'));
+async function getProblem(req, res, next){
+    try{
+        const response = await problemService.getProblem(req.params.id);
+        return res.status(StatusCodes.OK).json({
+            success:true,
+            message:"Succesfully fetched the problem",
+            error: {},
+            data: response
+        });
+    }
+    catch(error){
+        next(error)
+    }
+
 }
 
 function updateProblem(req, res, next){
