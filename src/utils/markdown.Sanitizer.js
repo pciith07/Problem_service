@@ -8,7 +8,7 @@ function sanitizedMarkdown(markedDownContent){
     console.log(convertedHtml);
     const sanitizedHtml = sanitizeHtml(convertedHtml,
         {
-            allowedTags: sanitizeHtml.defaults.allowedTags
+            allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img'])
         }
     );
     console.log(sanitizedHtml);

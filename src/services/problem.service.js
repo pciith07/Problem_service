@@ -2,14 +2,14 @@ const sanitizedMarkdown = require("../utils/markdown.Sanitizer");
 
 class ProblemService{
 
-    constructor(problemRepositoy){
-        this.problemRepositoy = problemRepositoy;
+    constructor(problemRepository){
+        this.problemRepository = problemRepository;
     }
 
     async createProblem(problemData){
         try{
             problemData.description = sanitizedMarkdown(problemData.description)
-            const problem = this.problemRepositoy.createProblem(problemData);
+            const problem = this.problemRepository.createProblem(problemData);
             return problem;
         }   
         catch(error){
@@ -19,8 +19,13 @@ class ProblemService{
     }
 
     async getAllProblems(){
-        const problems = await this.problemRepositoy.getAllProblems();
+        const problems = await this.problemRepository.getAllProblems();
         return problems;    
+    }
+
+    async getProblem(id){
+        const problem = await this.problemRepository.getProblem(id);
+        return problem;
     }
 }
 
