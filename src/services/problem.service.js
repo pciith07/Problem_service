@@ -1,4 +1,6 @@
+const { deleteProblem } = require("../controllers/problems.controller");
 const sanitizedMarkdown = require("../utils/markdown.Sanitizer");
+const {filterObject} = require("../utils/filter");
 
 class ProblemService{
 
@@ -26,6 +28,26 @@ class ProblemService{
     async getProblem(id){
         const problem = await this.problemRepository.getProblem(id);
         return problem;
+    }
+
+    async deleteProblem(id){
+        const problem = await this.problemRepository.deleteProblem(id);
+        return problem;
+    }
+
+    async updateProblem(id,problemData){
+        const allowedFields = ["title", "description", "difficulty", "testcases", "editorial"];
+        const filteredData = filterObject(problemData, allowedFields);
+        
+        if(filteredData.description != undefined){
+            filteredData.description = sanitizedMarkdown(filteredData.description);
+        }
+
+        if(filteredData.editorial !== undefined){
+            filteredData.editorial = sanitizedMarkdown(filteredData.editorial);
+        }
+
+        return await this.problemRepository.updateProblem(id,filteredData);
     }
 }
 

@@ -55,9 +55,21 @@ async function getProblem(req, res, next){
 
 }
 
-function updateProblem(req, res, next){
-    return next(new UnImplemented('updateProblem'));
+async function updateProblem(req, res, next){
+    try{
+        const revisedProblem = await problemService.updateProblem(req.params.id,req.body);
+        return res.status(StatusCodes.OK).json({
+            success: true,
+            message: "Succesfully updated the problem",
+            error: {},
+            data: revisedProblem
+        });
+    }
+    catch(error){
+        next(error);
+    }
 }
+
 
 function deleteProblem(req, res, next){
     return next(new UnImplemented('deleteProblem'));
